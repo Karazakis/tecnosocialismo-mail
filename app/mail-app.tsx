@@ -65,7 +65,7 @@ const initialMessages: Message[] = [
   {
     id: 2,
     folder: "inbox",
-    sender: "Spazio",
+    sender: "Cloud",
     address: "Il tuo archivio · esempio",
     subject: "Il quaderno condiviso è pronto da aprire",
     preview: "Tre nuovi materiali sono stati raccolti nella cartella Progetti aperti.",
@@ -109,7 +109,7 @@ const initialMessages: Message[] = [
     preview: "Riprendi il filo sulla tecnologia civica dal punto in cui lo avevi lasciato.",
     paragraphs: [
       "La conversazione dimostrativa sulla tecnologia civica è stata conservata.",
-      "In futuro potrai ricevere riepiloghi richiesti da te, continuare su Iskra oppure archiviare tutto nel tuo Spazio con un solo gesto.",
+      "In futuro potrai ricevere riepiloghi richiesti da te, continuare su Iskra oppure archiviare tutto nel tuo Cloud con un solo gesto.",
     ],
     time: "Ieri",
     date: "25 luglio 2026",
@@ -170,10 +170,14 @@ const initialMessages: Message[] = [
 ];
 
 const suiteLinks = [
-  { label: "Rizoma", href: "https://rizoma.tecnosocialismo.com", mark: "R" },
+  { label: "Home", href: "https://tecnosocialismo.com", mark: "T" },
   { label: "Iskra", href: "https://iskra.tecnosocialismo.com/chat", mark: "I" },
-  { label: "Spazio", href: "https://cloud.tecnosocialismo.com", mark: "S" },
-  { label: "Progetto", href: "https://tecnosocialismo.com", mark: "T" },
+  { label: "Rizoma", href: "https://rizoma.tecnosocialismo.com", mark: "R" },
+  { label: "Cloud", href: "https://cloud.tecnosocialismo.com", mark: "C" },
+  { label: "Mail", href: "https://mail.tecnosocialismo.com", mark: "M", current: true },
+  { label: "Video", href: "https://video.tecnosocialismo.com", mark: "V" },
+  { label: "Social", href: "https://social.tecnosocialismo.com", mark: "S" },
+  { label: "Account", href: "https://login.tecnosocialismo.com", mark: "A" },
 ];
 
 export function MailApp({ user }: { user: SuiteUser | null }) {
@@ -290,7 +294,7 @@ function Mailbox({ user }: { user: SuiteUser }) {
 
         <section className="suite-links">
           <p>LA SUITE</p>
-          <div>{suiteLinks.map((link) => <a key={link.label} href={link.href}><span>{link.mark}</span>{link.label}</a>)}</div>
+          <div>{suiteLinks.map((link) => <a className={link.current ? "current" : ""} aria-current={link.current ? "page" : undefined} key={link.label} href={link.href}><span>{link.mark}</span>{link.label}</a>)}</div>
         </section>
 
         <div className="interface-badge"><i /> Anteprima interfaccia</div>
@@ -371,7 +375,7 @@ function Mailbox({ user }: { user: SuiteUser }) {
                   <div className="reader-body">
                     {selected.paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
                     {selected.attachment && (
-                      <button className="attachment-card" onClick={() => showNotice("L’apertura degli allegati verrà collegata allo Spazio.")}>
+                      <button className="attachment-card" onClick={() => showNotice("L’apertura degli allegati verrà collegata al Cloud.")}>
                         <span>PDF</span><div><strong>{selected.attachment}</strong><small>Documento dimostrativo · 2,4 MB</small></div><Icon name="download" />
                       </button>
                     )}
@@ -398,7 +402,7 @@ function Mailbox({ user }: { user: SuiteUser }) {
             <label><span>Oggetto</span><input type="text" value={draft.subject} onChange={(event) => setDraft({ ...draft, subject: event.target.value })} placeholder="Di cosa vuoi parlare?" required /></label>
             <textarea value={draft.body} onChange={(event) => setDraft({ ...draft, body: event.target.value })} placeholder="Scrivi qui…" required />
             <footer>
-              <div><button type="button" title="Allega" onClick={() => showNotice("Gli allegati verranno collegati allo Spazio.")}><Icon name="paperclip" /></button><button type="button" title="Formattazione"><Icon name="text" /></button></div>
+              <div><button type="button" title="Allega" onClick={() => showNotice("Gli allegati verranno collegati al Cloud.")}><Icon name="paperclip" /></button><button type="button" title="Formattazione"><Icon name="text" /></button></div>
               <span>Invio disattivato nella demo</span>
               <button className="send-button" type="submit">Invia <Icon name="send" /></button>
             </footer>
@@ -417,7 +421,7 @@ function Welcome() {
     <main className="welcome-shell">
       <nav className="welcome-nav">
         <a className="welcome-brand" href="https://tecnosocialismo.com"><span className="wordmark-dot" /><strong>TECNOSOCIALISMO</strong></a>
-        <span>MAIL · ANTEPRIMA</span>
+        <div><span>MAIL · INTERFACCIA ALFA</span><SuiteMenu /></div>
       </nav>
       <section className="welcome-copy">
         <p className="eyebrow">UN POSTO PER PARLARSI</p>
@@ -431,12 +435,16 @@ function Welcome() {
         <div className="mail-orbit orbit-a" /><div className="mail-orbit orbit-b" />
         <div className="envelope"><span className="envelope-flap" /><i className="spark-core" /></div>
         <article className="floating-mail floating-one"><span>R</span><div><b>Rizoma</b><small>Nuovi collegamenti da esplorare</small></div><time>ora</time></article>
-        <article className="floating-mail floating-two"><span>S</span><div><b>Spazio</b><small>Un documento condiviso con te</small></div><time>ieri</time></article>
+        <article className="floating-mail floating-two"><span>C</span><div><b>Cloud</b><small>Un documento condiviso con te</small></div><time>ieri</time></article>
         <div className="signal signal-one" /><div className="signal signal-two" /><div className="signal signal-three" />
       </section>
       <footer className="welcome-footer"><span>Un solo account</span><span>Connessa alla suite</span><span>Progettata in Italia</span></footer>
     </main>
   );
+}
+
+function SuiteMenu() {
+  return <details className="welcome-suite"><summary>Servizi <span>＋</span></summary><div>{suiteLinks.map((link) => <a className={link.current ? "current" : ""} aria-current={link.current ? "page" : undefined} href={link.href} key={link.label}><i>{link.mark}</i>{link.label}<b>↗</b></a>)}</div></details>;
 }
 
 type IconName = "archive" | "arrow" | "back" | "check" | "close" | "download" | "edit" | "file" | "forward" | "inbox" | "mail" | "mailOpen" | "menu" | "more" | "paperclip" | "refresh" | "reply" | "search" | "send" | "spark" | "star" | "text" | "trash";
